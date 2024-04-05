@@ -15,6 +15,7 @@ namespace OnlineStore.Modules
         private static string choosenDelivery;
         private static string choosenDeliveryAdress;
         private static DateTime choosenDeliveryDate;
+        private static string OrderNumber;
         Product product;
         Delivery delivery;
 
@@ -22,30 +23,33 @@ namespace OnlineStore.Modules
         public Order()
         {
             product = new Product();        
-            product.ShowAssortment();
-        LabelChooseProduct:
-            Console.Write("\n\nВыберите номер товара: ");
-            if(int.TryParse(Console.ReadLine(), out chooseItem))
+            product.ShowAssortment();   
+            do 
             {
-                if (chooseItem > 0&&chooseItem<=product.ShowAssortmentCount())
+                Console.Write("\n\nВыберите номер товара: ");
+                if (int.TryParse(Console.ReadLine(), out chooseItem))
                 {
-                    choosenProduct= product.ChooseProduct(chooseItem);
+                    if (chooseItem > 0 && chooseItem <= product.ShowAssortmentCount())
+                    {
+                        choosenProduct = product.ChooseProduct(chooseItem);
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Товара не существует");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        
+                    }
                 }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Товара не существует");
                     Console.ForegroundColor = ConsoleColor.White;
-                    goto LabelChooseProduct;
+                    
                 }
             }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Товара не существует");
-                Console.ForegroundColor = ConsoleColor.White;
-                goto LabelChooseProduct;
-            }
+            while (string.IsNullOrEmpty(choosenProduct));
         }
 
         public void ShowDelivery()
@@ -58,58 +62,63 @@ namespace OnlineStore.Modules
             Console.ForegroundColor = ConsoleColor.White;
         }
 
-        public string GetDelivery()
-        {
-            LabelChooseDelivery:
-            Console.Write("Выберите способ: ");
-            if (int.TryParse(Console.ReadLine(),out chooseDelivery))
+        public void GetDelivery()
+        {       
+            do
             {
-                if (chooseDelivery == 1)
+                Console.Write("Выберите способ: ");
+                if (int.TryParse(Console.ReadLine(), out chooseDelivery))
                 {
+                    if (chooseDelivery == 1)
                     {
-                        delivery=new ShopDelivery();
-                        choosenDeliveryAdress=delivery.ShowAdress();
-                        choosenDeliveryDate=delivery.DeliveryDate;
-                      return choosenDelivery = delivery.ShowNameDelivery();
+                        {
+                            delivery = new ShopDelivery();
+                            choosenDeliveryAdress = delivery.ShowAdress();
+                            choosenDeliveryDate = delivery.DeliveryDate;
+                            choosenDelivery = delivery.ShowNameDelivery();
+                        }
                     }
-                }
-                else if (chooseDelivery == 2)
-                {
-                    delivery=new PickPointDelivery();
-                    choosenDeliveryAdress = delivery.ShowAdress();
-                    choosenDeliveryDate = delivery.DeliveryDate;
-                    return choosenDelivery = delivery.ShowNameDelivery();
-                }
-                else if(chooseDelivery == 3)
-                {
-                    delivery=new HomeDelivery();
-                    choosenDeliveryAdress = delivery.ShowAdress();
-                    choosenDeliveryDate = delivery.DeliveryDate;
-                    return choosenDelivery = delivery.ShowNameDelivery();
+                    else if (chooseDelivery == 2)
+                    {
+                        delivery = new PickPointDelivery();
+                        choosenDeliveryAdress = delivery.ShowAdress();
+                        choosenDeliveryDate = delivery.DeliveryDate;
+                        choosenDelivery = delivery.ShowNameDelivery();
+                    }
+                    else if (chooseDelivery == 3)
+                    {
+                        delivery = new HomeDelivery();
+                        choosenDeliveryAdress = delivery.ShowAdress();
+                        choosenDeliveryDate = delivery.DeliveryDate;
+                        choosenDelivery = delivery.ShowNameDelivery();
+                    }
+                    else
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Способ не найден");
+                        Console.ForegroundColor = ConsoleColor.White;
+                        
+                    }
+                    
                 }
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine("Способ не найден");
                     Console.ForegroundColor = ConsoleColor.White;
-                    goto LabelChooseDelivery;
+                    
                 }
             }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Способ не найден");
-                Console.ForegroundColor = ConsoleColor.White;
-                goto LabelChooseDelivery;
-            }
+            while (string.IsNullOrEmpty(choosenDelivery));
         }
 
         public static void CompleteOrder(string id)
         {
+            OrderNumber = id + DateTime.Now.GetDateString();
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("\n\t\tЗАКАЗ ОФОРМЛЕН\n");
             Console.ReadLine();
-            Console.WriteLine($"\tНОМЕР ЗАКАЗА: {id}{DateTime.Now.GetDateString()}");
+            Console.WriteLine($"\tНОМЕР ЗАКАЗА: {OrderNumber}");
             Console.Write($"ID: {id}\t\tДата заказа: {DateTime.Now.ToString("d")}\n\n"); 
             Console.WriteLine($"Товар: {choosenProduct}");
             Console.WriteLine($"Способ доставки: {choosenDelivery}\nАдрес: {choosenDeliveryAdress}");

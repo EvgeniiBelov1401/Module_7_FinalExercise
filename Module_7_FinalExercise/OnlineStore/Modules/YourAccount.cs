@@ -12,6 +12,8 @@ namespace OnlineStore.Modules
         private string id = "112233";
         private string login="login1234";  
         private string password="pass1234";
+        private string loginIn=string.Empty;
+        private string passwordIn=string.Empty;
         public static bool isYourAccount=false;
         public static string yourAdress = "Уездный город N, ул.Прямая, д.3, кв.4;";
 
@@ -36,9 +38,10 @@ namespace OnlineStore.Modules
         }
 
 
-        public override void LogIn(string login,string password)
+        public override void LogIn()
         {
-           if (this.login==login && this.password == password)
+            LoginPassIn();
+            if (this.login==loginIn && this.password == passwordIn)
             {
                 Console.Clear();
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -48,10 +51,36 @@ namespace OnlineStore.Modules
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("Неправильный логин и/или пароль");
-                Console.ForegroundColor = ConsoleColor.White;
+                LoginPassIn();
             }
+        }
+
+        public override void LoginPassIn()
+        {
+            do
+            {
+                do
+                {
+                    Console.Write("Логин: ");
+                    loginIn = Console.ReadLine();
+                }
+                while (string.IsNullOrEmpty(loginIn));
+
+                do
+                {
+                    Console.Write("Пароль: ");
+                    passwordIn = Console.ReadLine();
+                }
+                while (string.IsNullOrEmpty(passwordIn));
+                
+                if (this.login != loginIn || this.password != passwordIn)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Неправильный логин и/или пароль");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+            }
+            while (string.IsNullOrEmpty(loginIn) && string.IsNullOrEmpty(passwordIn));
         }
         
     }

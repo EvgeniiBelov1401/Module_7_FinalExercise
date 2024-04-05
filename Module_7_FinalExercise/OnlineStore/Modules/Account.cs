@@ -9,7 +9,8 @@ namespace OnlineStore.Modules
     internal abstract class Account
     {
         public abstract string ID { get;protected set; }
-        public abstract void LogIn(string login, string password);
+        public abstract void  LoginPassIn();
+        public abstract void LogIn();
 
     }
 }
